@@ -1,6 +1,7 @@
 """Small dependency-free check: python fenix-check.py."""
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 
 
 class Page(HTMLParser):
@@ -44,5 +45,7 @@ for link in page.links:
         assert link[1:] in page.ids, f"Broken anchor: {link}"
 for asset in page.assets:
     assert (root / asset).is_file(), f"Missing asset: {asset}"
+for asset in re.findall(r'url\([\'"]?([^\)\'"\s]+)[\'"]?\)', (root / "fenix.css").read_text(encoding="utf-8")):
+    assert (root / asset).is_file(), f"Missing CSS asset: {asset}"
 assert "noindex" in (root / "index.html").read_text(encoding="utf-8")
 print("OK: anchors, assets, review notes, image descriptions and external link safety")
