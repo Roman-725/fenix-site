@@ -34,7 +34,7 @@ class Page(HTMLParser):
 
 root = Path(__file__).resolve().parent
 page = Page()
-page.feed((root / "fenix.html").read_text(encoding="utf-8"))
+page.feed((root / "index.html").read_text(encoding="utf-8"))
 assert page.headings == 1, "Expected one h1"
 assert len(page.ids) == len(set(page.ids)), "Duplicate IDs"
 assert page.notes == 9, "Expected nine review notes"
@@ -44,5 +44,5 @@ for link in page.links:
         assert link[1:] in page.ids, f"Broken anchor: {link}"
 for asset in page.assets:
     assert (root / asset).is_file(), f"Missing asset: {asset}"
-assert "noindex" in (root / "fenix.html").read_text(encoding="utf-8")
+assert "noindex" in (root / "index.html").read_text(encoding="utf-8")
 print("OK: anchors, assets, review notes, image descriptions and external link safety")
